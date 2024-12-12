@@ -16,6 +16,9 @@ import java.net.URI;
 @Service
 @Data
 public class WeatherService {
+
+    @Value("${weather.city}")
+    private String city;
     @Value("${base.url}")
     private String url;
     @Value("${base.apiKey}")
@@ -25,7 +28,7 @@ public class WeatherService {
 
     public WeatherResponseData getWeather() {
         String uriString = UriComponentsBuilder.fromUri(URI.create(url))
-                .queryParam("place_id","almaty")
+                .queryParam("place_id",city)
                 .queryParam("sections", "current,hourly")
                 .queryParam("language", "en")
                 .queryParam("units", "auto")
@@ -35,10 +38,8 @@ public class WeatherService {
         headers.set("X-API-Key", apiKey);
         headers.set("Accept", "application/*+json");
 
-        // Упаковываем заголовки в HttpEntity
         HttpEntity<String> entity = new HttpEntity<>(headers);
 
-        // Выполняем запрос и получаем объект
         ResponseEntity<WeatherResponseData> response = template.exchange(
                 uriString,                       // URL запроса
                 HttpMethod.GET,            // HTTP метод

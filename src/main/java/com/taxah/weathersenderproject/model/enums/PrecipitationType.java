@@ -16,7 +16,6 @@ public enum PrecipitationType {
 
     private final String russianTranslation;
 
-    // Для быстрого поиска при десериализации
     private static final Map<String, PrecipitationType> BY_NAME = new HashMap<>();
 
     static {
@@ -42,7 +41,7 @@ public enum PrecipitationType {
     @JsonValue
     @Override
     public String toString() {
-        return name().toLowerCase(); // например, "rain", "snow"
+        return name().toLowerCase().replace("_", " ");
     }
 
     /**
@@ -50,6 +49,6 @@ public enum PrecipitationType {
      */
     @JsonCreator
     public static PrecipitationType fromString(String name) {
-        return BY_NAME.getOrDefault(name.toLowerCase(), NONE);
+        return BY_NAME.getOrDefault(name.toLowerCase().replace("_", " "), NONE);
     }
 }

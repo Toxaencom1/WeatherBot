@@ -8,13 +8,12 @@ import org.springframework.web.client.RestTemplate;
 
 /**
  * AppConfig Class
- *
+ * <p>
  * This class serves as the configuration class for the Spring application.
  * It configures beans and properties needed for the application to function.
  */
 @Data
 @Configuration
-@ConfigurationPropertiesScan("com.taxah.weathersenderproject.config")
 public class AppConfig {
     /**
      * RestTemplate Bean Configuration
@@ -28,9 +27,4 @@ public class AppConfig {
         return new RestTemplate();
     }
 
-//    @Bean
-//    public HttpHeaders headers()
-//    {
-//        return new HttpHeaders();
-//    }
 }

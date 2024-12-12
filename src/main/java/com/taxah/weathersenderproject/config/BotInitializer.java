@@ -1,8 +1,5 @@
 package com.taxah.weathersenderproject.config;
 
-import com.taxah.weathersenderproject.controller.WeatherController;
-import com.taxah.weathersenderproject.model.WeatherCurrent;
-import com.taxah.weathersenderproject.model.WeatherResponseData;
 import com.taxah.weathersenderproject.service.BotService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +16,6 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 public class BotInitializer {
 
     private final BotService bot;
-
 
     @EventListener({ContextRefreshedEvent.class})
     public void init() throws TelegramApiException {

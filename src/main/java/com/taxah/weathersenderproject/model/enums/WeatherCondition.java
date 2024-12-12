@@ -64,6 +64,7 @@ public enum WeatherCondition {
     @JsonValue
     @Override
     public String toString() {
+        name().toLowerCase().replace("_", " ");
         return name().toLowerCase().replace("_", " ");
     }
 

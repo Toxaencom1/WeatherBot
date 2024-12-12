@@ -1,7 +1,6 @@
 package com.taxah.weathersenderproject.service;
 
-import com.taxah.weathersenderproject.model.WeatherCurrent;
-import com.taxah.weathersenderproject.model.decorator.StandardWeatherDataDecorator;
+import com.taxah.weathersenderproject.model.decorator.WeatherDecorator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -16,20 +15,21 @@ import java.util.Map;
 @Component
 public class BotService extends TelegramLongPollingBot {
 
-    private String botToken;
     private final String botName;
     private final Map<String, Long> subscribers;
     private final WeatherService weatherService;
+    private WeatherDecorator weatherDecorator;
 
 
     public BotService(@Value("${bot.token}") String botToken,
                       @Value("${bot.name}") String botName,
-                      WeatherService weatherService) {
+                      WeatherService weatherService,
+                      WeatherDecorator weatherDecorator) {
         super(botToken);
         this.botName = botName;
         this.subscribers = new HashMap<>();
-        System.out.println(subscribers);
         this.weatherService = weatherService;
+        this.weatherDecorator = weatherDecorator;
     }
 
     @Override
@@ -47,16 +47,18 @@ public class BotService extends TelegramLongPollingBot {
         }
     }
 
-    @Scheduled(cron = "0/15 * * * * *")
+    @Scheduled(cron = "0/7 * * * * *")
     public void sendDailyMessages() {
-        for (Long chatId : subscribers.values()) {
-            SendMessage message = new SendMessage();
-            message.setChatId(chatId);
-            message.setText(StandardWeatherDataDecorator.decorate(weatherService.getWeather()));
-            try {
-                this.execute(message);
-            } catch (TelegramApiException e) {
-                e.printStackTrace(System.out);
+        if (!subscribers.isEmpty()) {
+            for (Long chatId : subscribers.values()) {
+                SendMessage message = new SendMessage();
+                message.setChatId(chatId);
+                message.setText(weatherDecorator.decorate(weatherService.getWeather()));
+                try {
+                    this.execute(message);
+                } catch (TelegramApiException e) {
+                    e.printStackTrace(System.out);
+                }
             }
         }
     }

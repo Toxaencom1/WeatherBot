@@ -1,7 +1,6 @@
 package com.taxah.weathersenderproject.controller;
 
 
-import com.taxah.weathersenderproject.model.WeatherCurrent;
 import com.taxah.weathersenderproject.model.WeatherResponseData;
 import com.taxah.weathersenderproject.service.WeatherService;
 import lombok.Data;
