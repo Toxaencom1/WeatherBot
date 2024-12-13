@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: WeatherSender
+  main:
+    allow-bean-definition-overriding: true
+
+  datasource:
+    url: jdbc:mysql://localhost:3307/JavaRush
+    username:
+    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+
+weatherAPI:
+  url: https://www.meteosource.com/api/v1/free/point
+  apiKey:
+
+bot:
+  name: toxaecom1_first_bot
+  token:
+
+weather:
+  city: ${WEATHER_CITY:almaty}
