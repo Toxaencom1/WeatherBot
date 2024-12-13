@@ -49,6 +49,9 @@ public enum PrecipitationType {
      */
     @JsonCreator
     public static PrecipitationType fromString(String name) {
-        return BY_NAME.getOrDefault(name.toLowerCase().replace("_", " "), NONE);
+        System.out.println("Input name: " + name);
+        PrecipitationType type = BY_NAME.getOrDefault(name.toLowerCase().replace("_", " "), NONE);
+        System.out.println("Resolved type: " + type);
+        return type;
     }
 }

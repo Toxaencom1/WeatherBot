@@ -32,8 +32,11 @@ public enum WeatherCondition {
     POSSIBLE_FREEZING_RAIN("Возможен замерзший дождь"),
     HAIL("Град"),
     CLEAR_NIGHT("Ясно (ночь)"),
+    CLEAR("Ясно"),
     MOSTLY_CLEAR_NIGHT("Преимущественно ясно (ночь)"),
+    MOSTLY_CLEAR("Преимущественно ясно"),
     PARTLY_CLEAR_NIGHT("Переменная облачность (ночь)"),
+    PARTLY_CLEAR("Переменная облачность"),
     MOSTLY_CLOUDY_NIGHT("Преимущественно облачно (ночь)"),
     CLOUDY_NIGHT("Облачно (ночь)"),
     OVERCAST_LOW_CLOUDS_NIGHT("Пасмурно с низкими облаками (ночь)"),
@@ -64,7 +67,6 @@ public enum WeatherCondition {
     @JsonValue
     @Override
     public String toString() {
-        name().toLowerCase().replace("_", " ");
         return name().toLowerCase().replace("_", " ");
     }
 

@@ -19,9 +19,9 @@ public class WeatherService {
 
     @Value("${weather.city}")
     private String city;
-    @Value("${base.url}")
+    @Value("${weatherAPI.url}")
     private String url;
-    @Value("${base.apiKey}")
+    @Value("${weatherAPI.apiKey}")
     private String apiKey;
 
     private final RestTemplate template;
