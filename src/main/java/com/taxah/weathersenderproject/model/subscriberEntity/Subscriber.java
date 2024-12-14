@@ -1,4 +1,4 @@
-package com.taxah.weathersenderproject.model.weatherObjects;
+package com.taxah.weathersenderproject.model.subscriberEntity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -11,11 +11,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "cloud_cover")
-public class CloudCover {
-
+public class Subscriber {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private int total;
+    private String name;
+    @Column(name = "chat_id")
+    private Long chatId;
+
+    public Subscriber(String name, Long chatId) {
+        this.name = name;
+        this.chatId = chatId;
+    }
 }

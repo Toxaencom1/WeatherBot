@@ -1,7 +1,7 @@
 package com.taxah.weathersenderproject.model.decorator;
 
-import com.taxah.weathersenderproject.model.WeatherResponseData;
-import com.taxah.weathersenderproject.model.weatherObjects.HourlyData;
+import com.taxah.weathersenderproject.model.weatherEntity.WeatherResponseData;
+import com.taxah.weathersenderproject.model.weatherEntity.HourlyData;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;

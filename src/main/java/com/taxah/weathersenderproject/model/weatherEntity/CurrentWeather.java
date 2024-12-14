@@ -1,4 +1,4 @@
-package com.taxah.weathersenderproject.model.weatherObjects;
+package com.taxah.weathersenderproject.model.weatherEntity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

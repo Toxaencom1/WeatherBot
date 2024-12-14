@@ -1,6 +1,6 @@
 package com.taxah.weathersenderproject.repository;
 
-import com.taxah.weathersenderproject.model.weatherObjects.CurrentWeather;
+import com.taxah.weathersenderproject.model.weatherEntity.CurrentWeather;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

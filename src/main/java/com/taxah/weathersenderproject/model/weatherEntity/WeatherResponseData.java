@@ -1,7 +1,5 @@
-package com.taxah.weathersenderproject.model;
+package com.taxah.weathersenderproject.model.weatherEntity;
 
-import com.taxah.weathersenderproject.model.weatherObjects.CurrentWeather;
-import com.taxah.weathersenderproject.model.weatherObjects.HourlyWeather;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

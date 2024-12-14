@@ -1,6 +1,5 @@
-package com.taxah.weathersenderproject.model.weatherObjects;
+package com.taxah.weathersenderproject.model.weatherEntity;
 
-import com.taxah.weathersenderproject.model.enums.PrecipitationType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,14 +11,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Table(name = "cloud_cover")
+public class CloudCover {
 
-public class Precipitation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private double total;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private PrecipitationType type;
+    private int total;
 }

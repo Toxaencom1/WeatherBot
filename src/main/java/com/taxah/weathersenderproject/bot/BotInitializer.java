@@ -1,8 +1,8 @@
-package com.taxah.weathersenderproject.config;
+package com.taxah.weathersenderproject.bot;
 
-import com.taxah.weathersenderproject.model.WeatherResponseData;
+import com.taxah.weathersenderproject.model.weatherEntity.WeatherResponseData;
 import com.taxah.weathersenderproject.repository.WeatherResponseDataRepository;
-import com.taxah.weathersenderproject.service.BotService;
+import com.taxah.weathersenderproject.service.TelegramBotService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -19,19 +19,22 @@ import java.time.LocalDate;
 @Data
 public class BotInitializer {
 
-    private final BotService bot;
+    private final WeatherTelegramBot bot;
 
     @EventListener({ContextRefreshedEvent.class})
     public void init() throws TelegramApiException {
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
 
-        WeatherResponseDataRepository repository = bot.getRepository();
+        TelegramBotService service = bot.getService();
+        WeatherResponseDataRepository repository = service.getWeatherRepository();
         WeatherResponseData byTodayWeather = repository.findByCreatedDay(LocalDate.now());
+
+        service.fetchSubscribers();
 
         if (byTodayWeather != null) {
             bot.setWeather(byTodayWeather);
         } else {
-            WeatherResponseData weather = bot.getWeatherService().getWeather();
+            WeatherResponseData weather = service.getWeatherService().getWeather();
             weather.setCreatedDay(LocalDate.now());
             bot.setWeather(weather);
             repository.save(weather);

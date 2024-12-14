@@ -1,6 +1,6 @@
 package com.taxah.weathersenderproject.service;
 
-import com.taxah.weathersenderproject.model.WeatherResponseData;
+import com.taxah.weathersenderproject.model.weatherEntity.WeatherResponseData;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;

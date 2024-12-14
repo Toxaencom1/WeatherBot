@@ -1,4 +1,4 @@
-package com.taxah.weathersenderproject.model.weatherObjects;
+package com.taxah.weathersenderproject.model.weatherEntity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.taxah.weathersenderproject.model.enums.WeatherCondition;
