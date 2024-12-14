@@ -1,7 +1,6 @@
 package com.taxah.weathersenderproject.service;
 
 import com.taxah.weathersenderproject.model.decorator.WeatherDecorator;
-import com.taxah.weathersenderproject.model.subscriberEntity.Subscriber;
 import com.taxah.weathersenderproject.model.weatherEntity.WeatherResponseData;
 import com.taxah.weathersenderproject.repository.WeatherResponseDataRepository;
 import lombok.Data;

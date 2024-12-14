@@ -23,6 +23,7 @@ weatherAPI:
   apiKey:
 
 bot:
+  cron: 0/7 * * * * *
   name: toxaecom1_first_bot
   token:
 
