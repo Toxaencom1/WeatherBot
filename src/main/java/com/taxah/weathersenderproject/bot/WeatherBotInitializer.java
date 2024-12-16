@@ -1,7 +1,6 @@
 package com.taxah.weathersenderproject.bot;
 
 import com.taxah.weathersenderproject.model.weatherEntity.WeatherResponseData;
-import com.taxah.weathersenderproject.repository.WeatherResponseDataRepository;
 import com.taxah.weathersenderproject.service.WeatherBotService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;

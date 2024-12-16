@@ -50,10 +50,9 @@ public class StandardWeatherPhotoDecorator implements WeatherPhotoDecorator {
             y += step;
 
             sb2.append("|");
-            for (int i = 0; i < hourlyData.size(); i++) {
+            for (HourlyData hourlyDatum : hourlyData) {
                 String hour = "|%5d|";
-                HourlyData hourlyTime = hourlyData.get(i);
-                sb2.append(String.format(hour, hourlyTime.getDate().getHour()));
+                sb2.append(String.format(hour, hourlyDatum.getDate().getHour()));
             }
             sb2.append("|");
             g.drawString(sb2.toString(), x, y);
@@ -65,10 +64,9 @@ public class StandardWeatherPhotoDecorator implements WeatherPhotoDecorator {
             y += step;
 
             sb4.append("|");
-            for (int i = 0; i < hourlyData.size(); i++) {
+            for (HourlyData hourlyDatum : hourlyData) {
                 String hour = "|%5.1f|";
-                HourlyData hourlyTime = hourlyData.get(i);
-                sb4.append(String.format(hour, hourlyTime.getTemperature()));
+                sb4.append(String.format(hour, hourlyDatum.getTemperature()));
             }
             sb4.append("|");
             g.drawString(sb4.toString(), x, y);
