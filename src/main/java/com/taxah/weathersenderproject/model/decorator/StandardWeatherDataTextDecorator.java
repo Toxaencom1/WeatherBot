@@ -6,13 +6,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.meta.api.objects.InputFile;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Component
 @Primary
-public class StandardWeatherDataDecorator implements WeatherDecorator {
+public class StandardWeatherDataTextDecorator implements WeatherTextDecorator {
     @Value("${weather.city}")
     private String city;
 
@@ -33,8 +34,8 @@ public class StandardWeatherDataDecorator implements WeatherDecorator {
                     .append("Направление ветра - ").append(data.getWind().getDir()).append(" ")
                     .append("со скоростью ").append(data.getWind().getSpeed()).append("\n")
                     .append((data.getCloudCover() != null && data.getCloudCover().getTotal() != 0) ? "Небо закрыто тучами на " : "")
-                    .append((data.getCloudCover() != null && data.getCloudCover().getTotal() != 0) ? data.getCloudCover().getTotal() + "%" : "").append("\n")
-                    .append((data.getCloudCover() != null && data.getCloudCover().getTotal() == 0) ? "Чистое небо над головой" : "")
+                    .append((data.getCloudCover() != null && data.getCloudCover().getTotal() != 0) ? data.getCloudCover().getTotal() + "%\n" : "")
+                    .append((data.getCloudCover() != null && data.getCloudCover().getTotal() == 0) ? "Чистое небо над головой\n" : "")
                     .append("Осадки ").append(data.getPrecipitation().getTotal())
                     .append((data.getPrecipitation().getTotal() != 0) ? " единиц" : "")
                     .append((data.getPrecipitation().getTotal() != 0) ? " типа " : "")

@@ -1,13 +1,15 @@
 package com.taxah.weathersenderproject.bot;
 
 import com.taxah.weathersenderproject.model.weatherEntity.WeatherResponseData;
-import com.taxah.weathersenderproject.service.TelegramBotService;
+import com.taxah.weathersenderproject.service.WeatherBotService;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
@@ -34,7 +36,7 @@ public class WeatherTelegramBot extends TelegramLongPollingBot {
 
     private final String botName;
     @Getter
-    private final TelegramBotService service;
+    private final WeatherBotService service;
     @Getter
     @Setter
     private WeatherResponseData weather;
@@ -42,7 +44,7 @@ public class WeatherTelegramBot extends TelegramLongPollingBot {
 
     public WeatherTelegramBot(@Value("${bot.token}") String botToken,
                               @Value("${bot.name}") String botName,
-                              TelegramBotService service) {
+                              WeatherBotService service) {
         super(botToken);
         this.botName = botName;
         this.service = service;
@@ -81,6 +83,22 @@ public class WeatherTelegramBot extends TelegramLongPollingBot {
             execute(message);
         } catch (TelegramApiException e) {
             e.printStackTrace(System.out);
+        }
+    }
+
+    public void sendTextMessage(long chatId, String text, InputFile inputFile) {
+        if (inputFile != null) {
+            SendPhoto sendPhoto = new SendPhoto();
+            sendPhoto.setChatId(chatId);
+            sendPhoto.setPhoto(inputFile);
+            try {
+                sendTextMessage(chatId, text);
+                execute(sendPhoto);
+            } catch (TelegramApiException e) {
+                e.printStackTrace(System.out);
+            }
+        } else {
+            sendTextMessage(chatId, "Ошибка получения погоды и файла");
         }
     }
 

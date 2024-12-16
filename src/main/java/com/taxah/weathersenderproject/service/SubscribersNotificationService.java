@@ -19,21 +19,26 @@ public class SubscribersNotificationService {
 
     @Scheduled(cron = "${bot.cron}")
     public void sendDailyMessages() {
-        TelegramBotService service = bot.getService();
+        WeatherBotService service = bot.getService();
         WeatherResponseData weather = bot.getWeather();
+
+        String message = service.decorateText(weather);
 
         if (weather == null || !weather.getCreatedDay().equals(LocalDate.now())) {
             WeatherResponseData weatherUpdated = service.getWeather();
             if (weatherUpdated != null) {
                 System.out.println("Получаю новую погоду!!!");
-                bot.setWeather(service.saveWeather(weatherUpdated));
-        } else {
+                WeatherResponseData receivedWeather = service.saveWeather(weatherUpdated);
+                bot.setWeather(receivedWeather);
+                message = service.decorateText(receivedWeather);
+            } else {
                 System.out.println("Ошибка получения погоды");
+                message = "Ошибка получения погоды";
             }
         }
         if (!subscriberService.isEmpty()) {
             for (Subscriber subscriber : subscriberService) {
-                bot.sendTextMessage(subscriber.getChatId(), service.decorate(weather));
+                bot.sendTextMessage(subscriber.getChatId(), message, service.decoratePhoto(weather));
             }
         }
     }
