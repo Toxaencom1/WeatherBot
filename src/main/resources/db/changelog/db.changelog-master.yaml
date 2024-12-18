@@ -1,0 +1,25 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/01-initial-schema.xml
+
+  - changeSet:
+      id: 2
+      author: TaXaH
+      changes:
+        - sqlFile:
+            path: classpath:/db/changelog/sql/add_location_tables.sql
+            encoding: UTF-8
+  - changeSet:
+      id: 3
+      author: TaXaH
+      changes:
+        - sqlFile:
+            path: classpath:/db/changelog/sql/country_cities_field_rename.sql
+            encoding: UTF-8
+  - changeSet:
+      id: 4
+      author: TaXaH
+      changes:
+        - sqlFile:
+            path: classpath:/db/changelog/sql/subscriber_add_location_field.sql
+            encoding: UTF-8
