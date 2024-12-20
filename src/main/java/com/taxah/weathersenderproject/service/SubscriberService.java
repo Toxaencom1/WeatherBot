@@ -1,6 +1,12 @@
 package com.taxah.weathersenderproject.service;
 
 import com.taxah.weathersenderproject.model.subscriberEntity.Subscriber;
+import com.taxah.weathersenderproject.model.weatherEntity.City;
+import com.taxah.weathersenderproject.model.weatherEntity.Country;
+import com.taxah.weathersenderproject.model.weatherEntity.Location;
+import com.taxah.weathersenderproject.repository.CityRepository;
+import com.taxah.weathersenderproject.repository.CountryRepository;
+import com.taxah.weathersenderproject.repository.LocationRepository;
 import com.taxah.weathersenderproject.repository.SubscriberRepository;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -18,9 +24,17 @@ public class SubscriberService implements Iterable<Subscriber> {
 
     private List<Subscriber> subscribers = new ArrayList<>();
     private final SubscriberRepository subscriberRepository;
+    private final CountryRepository countryRepository;
+    private final LocationRepository locationRepository;
+    private final CityRepository cityRepository;
 
     public void addSubscriber(String name, Long chatId) {
         Subscriber subscriber = new Subscriber(name, chatId);
+        subscribers.add(subscriber);
+        subscriberRepository.save(subscriber);
+    }
+
+    public void addSubscriber(Subscriber subscriber) {
         subscribers.add(subscriber);
         subscriberRepository.save(subscriber);
     }
@@ -46,5 +60,42 @@ public class SubscriberService implements Iterable<Subscriber> {
 
     public void fetchSubscribers() {
         subscribers = subscriberRepository.findAll();
+    }
+
+    public Boolean checkIfSubscriberExists(Long chatId) {
+        List<Subscriber> byChatId = subscriberRepository.findByChatId(chatId);
+        return !byChatId.isEmpty();
+    }
+
+    public List<Country> getAllCountries() {
+        return countryRepository.findAll();
+    }
+
+    public boolean isLocationsEmpty() {
+        return locationRepository.count() == 0;
+    }
+
+    public void fillLocations() {
+        List<Country> countries = countryRepository.findAll();
+        List<Location> locations = new ArrayList<>();
+        for (Country country : countries) {
+            for (City city : country.getCities()) {
+                locations.add(
+                        Location.builder()
+                                .country(country)
+                                .city(city)
+                                .build()
+                );
+            }
+        }
+        locationRepository.saveAll(locations);
+    }
+
+    public Location getLocation(String country, String city) {
+        return locationRepository.findByCountry_NameAndCity_Name(country, city).orElse(null);
+    }
+
+    public List<City> getAllCitiesBYCountryName(String countryName) {
+        return cityRepository.findByCountry_Name(countryName);
     }
 }

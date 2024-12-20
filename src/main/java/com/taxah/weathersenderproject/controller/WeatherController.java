@@ -20,7 +20,7 @@ public class WeatherController {
 
     @RequestMapping("/get")
     public WeatherResponseData getWeather() {
-        WeatherResponseData weather = service.getWeather();
+        WeatherResponseData weather = service.getWeather("Almaty");
         if (weather != null) {
             System.out.println("Weather gathered!!! " + LocalDateTime.now());
         }

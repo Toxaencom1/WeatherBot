@@ -13,11 +13,9 @@ import java.util.List;
 @Component
 @Primary
 public class StandardWeatherDataTextDecorator implements WeatherTextDecorator {
-    @Value("${weather.city}")
-    private String city;
 
     @Override
-    public String decorate(WeatherResponseData rd) {
+    public String decorate(WeatherResponseData rd, String city) {
 //        System.out.println(rd.toString());
         StringBuilder sb = new StringBuilder();
         sb.append("Погода в ")

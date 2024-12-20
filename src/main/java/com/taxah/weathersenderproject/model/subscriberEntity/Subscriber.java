@@ -20,7 +20,7 @@ public class Subscriber {
     @Column(name = "chat_id")
     private Long chatId;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.MERGE)
     private Location location;
 
     public Subscriber(String name, Long chatId) {

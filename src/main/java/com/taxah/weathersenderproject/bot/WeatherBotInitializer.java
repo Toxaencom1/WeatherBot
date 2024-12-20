@@ -1,7 +1,7 @@
 package com.taxah.weathersenderproject.bot;
 
 import com.taxah.weathersenderproject.model.weatherEntity.WeatherResponseData;
-import com.taxah.weathersenderproject.service.WeatherBotService;
+import com.taxah.weathersenderproject.service.WeatherBotFacade;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -12,6 +12,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -24,18 +25,21 @@ public class WeatherBotInitializer {
     public void init() throws TelegramApiException {
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
 
-        WeatherBotService service = bot.getService();
-        WeatherResponseData byTodayWeather = service.findByCreatedDay(LocalDate.now());
+        WeatherBotFacade botFacade = bot.getBotFacade();
+        if (bot.getBotFacade().isLocationsEmpty()) {
+            bot.getBotFacade().fillLocations();
+        }
 
-        service.fetchSubscribers();
+        List<WeatherResponseData> byTodayWeather = botFacade.findWeatherByCreatedDay(LocalDate.now());
 
-        if (byTodayWeather != null) {
-            bot.setWeather(byTodayWeather);
+        botFacade.fetchSubscribers();
+
+        if (byTodayWeather != null && !byTodayWeather.isEmpty()) {
+            bot.setWeathers(byTodayWeather);
         } else {
-            WeatherResponseData weather = service.getWeatherService().getWeather();
-            weather.setCreatedDay(LocalDate.now());
-            bot.setWeather(weather);
-            service.saveWeather(weather);
+            List<WeatherResponseData> weather = botFacade.getDailyWeather();
+            bot.setWeathers(weather);
+            botFacade.saveWeathers(weather);
         }
         telegramBotsApi.registerBot(bot);
     }

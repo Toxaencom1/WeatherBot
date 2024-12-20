@@ -10,5 +10,5 @@ import java.util.List;
 @Repository
 public interface WeatherResponseDataRepository extends JpaRepository<WeatherResponseData, Long> {
 
-    List<WeatherResponseData> findByCreatedDayAndTimezoneContainingIgnoreCase(LocalDate now, String timeZone);
+    List<WeatherResponseData> findByCreatedDay(LocalDate date);
 }

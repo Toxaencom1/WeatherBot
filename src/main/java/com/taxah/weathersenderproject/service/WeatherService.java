@@ -1,6 +1,8 @@
 package com.taxah.weathersenderproject.service;
 
+import com.taxah.weathersenderproject.model.weatherEntity.City;
 import com.taxah.weathersenderproject.model.weatherEntity.WeatherResponseData;
+import com.taxah.weathersenderproject.repository.CityRepository;
 import com.taxah.weathersenderproject.repository.WeatherResponseDataRepository;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,14 +17,13 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @Data
 public class WeatherService {
 
-    @Value("${weather.city}")
-    private String city;
     @Value("${weatherAPI.url}")
     private String url;
     @Value("${weatherAPI.apiKey}")
@@ -30,10 +31,11 @@ public class WeatherService {
 
     private final RestTemplate template;
     private final WeatherResponseDataRepository weatherRepository;
+    private final CityRepository cityRepository;
 
-    public WeatherResponseData getWeather() {
+    public WeatherResponseData getWeather(String city) {
         String uriString = UriComponentsBuilder.fromUri(URI.create(url))
-                .queryParam("place_id",city)
+                .queryParam("place_id", city)
                 .queryParam("sections", "current,hourly")
                 .queryParam("language", "en")
                 .queryParam("units", "auto")
@@ -58,20 +60,23 @@ public class WeatherService {
         return weatherRepository.save(weatherData);
     }
 
-    public WeatherResponseData findByCreatedDay(LocalDate date) {
-
-        List<WeatherResponseData> list = weatherRepository.findByCreatedDayAndTimezoneContainingIgnoreCase(date, city);
-        if (list != null && !list.isEmpty()) {
-            return list.get(0);
-        }
-        return null;
+    public List<WeatherResponseData> findByCreatedDay(LocalDate date) {
+        return weatherRepository.findByCreatedDay(date);
     }
 
     @Scheduled(cron = "${weather.cron}")
-    public void getDailyWeather() {
-        WeatherResponseData byCreatedDay = findByCreatedDay(LocalDate.now());
-        if (byCreatedDay == null) {
-            weatherRepository.save(getWeather());
+    public List<WeatherResponseData> getDailyWeather() {
+        List<WeatherResponseData> weathers = weatherRepository.findByCreatedDay(LocalDate.now());
+
+        List<WeatherResponseData> weathersData = new ArrayList<>();
+        if (weathers.isEmpty()) {
+            List<City> cities = cityRepository.findAll();
+            for (City city : cities) {
+                WeatherResponseData weatherResponseData = weatherRepository.save(getWeather(city.getName()));
+                weathersData.add(weatherResponseData);
+            }
         }
+        return weathersData;
+
     }
 }

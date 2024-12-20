@@ -21,10 +21,6 @@ create table location
     country_id bigint null,
     id         bigint auto_increment
         primary key,
-    constraint UK44pj3o451100mjroblc8v7vqf
-        unique (city_id),
-    constraint UKoij09nrgw3jac87nxirlho8cj
-        unique (country_id),
     constraint FKn5m6ve3ryy2r25qvisdrg0aos
         foreign key (country_id) references country (id),
     constraint FKr2gdhhu8rhyrvslukhtfbg8v5
