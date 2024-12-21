@@ -1,4 +1,4 @@
-package com.taxah.weathersenderproject.model.weatherEntity.dto;
+package com.taxah.weathersenderproject.model.subscriberEntity.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

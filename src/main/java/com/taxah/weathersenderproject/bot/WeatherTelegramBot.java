@@ -5,7 +5,7 @@ import com.taxah.weathersenderproject.model.weatherEntity.City;
 import com.taxah.weathersenderproject.model.weatherEntity.Country;
 import com.taxah.weathersenderproject.model.weatherEntity.Location;
 import com.taxah.weathersenderproject.model.weatherEntity.WeatherResponseData;
-import com.taxah.weathersenderproject.model.weatherEntity.dto.SubscriberDTO;
+import com.taxah.weathersenderproject.model.subscriberEntity.dto.SubscriberDTO;
 import com.taxah.weathersenderproject.service.WeatherBotFacade;
 import lombok.Getter;
 import lombok.Setter;

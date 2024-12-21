@@ -1,4 +1,7 @@
+# variables taken from Program parameters (Intellij Idea)
 spring:
+  liquibase:
+    enabled: true
   application:
     name: WeatherSender
   main:
@@ -6,8 +9,8 @@ spring:
 
   datasource:
     url: jdbc:mysql://localhost:3307/JavaRush
-    username:
-    password:
+    username: ${db_username}
+    password: ${db_password}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
@@ -17,15 +20,16 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: false
 
 weatherAPI:
   url: https://www.meteosource.com/api/v1/free/point
-  apiKey:
+  apiKey: ${X-API-Key}
 
 bot:
-  cron: 0/7 * * * * *
+  cron: 0 0/1 * * * * #0 0 7 * * *
   name: toxaecom1_first_bot
-  token:
+  token: ${bot_token}
 
 weather:
-  city: ${WEATHER_CITY:almaty}
+  cron: 10 0 0 * * *

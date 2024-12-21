@@ -21,7 +21,6 @@ public class SubscribersNotificationService {
     public void sendDailyMessages() {
         WeatherBotFacade botFacade = bot.getBotFacade();
         List<WeatherResponseData> weathers = bot.getWeathers();
-        System.out.println("TEST MESSAGE");
 
         if (weathers != null && !weathers.isEmpty()) {
             for (Subscriber subscriber : bot.getSubscribers()) {

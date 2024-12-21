@@ -30,10 +30,6 @@ public class StandardWeatherPhotoDecorator implements WeatherPhotoDecorator {
             Font monoFont = new Font("Courier New", Font.PLAIN, 10);
             g.setFont(monoFont);
 
-            Font font = g.getFont();
-            System.out.println("Font name: " + font.getName());
-            System.out.println("Font family: " + font.getFamily());
-
             StringBuilder sb1 = new StringBuilder();
             StringBuilder sb2 = new StringBuilder();
             StringBuilder sb3 = new StringBuilder();
