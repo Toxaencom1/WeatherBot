@@ -25,8 +25,8 @@ public class CurrentWeather {
     @JoinColumn(name = "wind_id")
     private Wind wind;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "precipitation_id")
+    @OneToOne(cascade = {CascadeType.ALL})
+    @JoinColumn
     private Precipitation precipitation;
     private int cloudCover;
 }

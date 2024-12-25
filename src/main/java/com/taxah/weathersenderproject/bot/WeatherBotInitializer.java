@@ -1,5 +1,6 @@
 package com.taxah.weathersenderproject.bot;
 
+import com.taxah.weathersenderproject.model.weatherEntity.WeatherEntry;
 import com.taxah.weathersenderproject.model.weatherEntity.WeatherResponseData;
 import com.taxah.weathersenderproject.service.WeatherBotFacade;
 import lombok.Data;
@@ -30,14 +31,13 @@ public class WeatherBotInitializer {
             bot.getBotFacade().fillLocations();
         }
 
-        List<WeatherResponseData> byTodayWeather = botFacade.findWeatherByCreatedDay(LocalDate.now());
-
+        List<WeatherEntry> byTodayWeather = botFacade.findWeatherByCreatedDay(LocalDate.now());
         botFacade.fetchSubscribers();
 
         if (byTodayWeather != null && !byTodayWeather.isEmpty()) {
             bot.setWeathers(byTodayWeather);
         } else {
-            List<WeatherResponseData> weather = botFacade.getDailyWeather();
+            List<WeatherEntry> weather = botFacade.getDailyWeather();
             bot.setWeathers(weather);
             botFacade.saveWeathers(weather);
         }

@@ -1,6 +1,7 @@
 package com.taxah.weathersenderproject.model.decorator;
 
 import com.taxah.weathersenderproject.model.weatherEntity.HourlyData;
+import com.taxah.weathersenderproject.model.weatherEntity.WeatherEntry;
 import com.taxah.weathersenderproject.model.weatherEntity.WeatherResponseData;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Primary;
@@ -14,13 +15,13 @@ import java.util.List;
 public class StandardWeatherDataTextDecorator implements WeatherTextDecorator {
 
     @Override
-    public String decorate(WeatherResponseData rd, String city) {
+    public String decorate(WeatherEntry weatherEntry) {
 //        System.out.println(rd.toString());
         StringBuilder sb = new StringBuilder();
         sb.append("Погода в ")
-                .append(StringUtils.capitalize(city))
+                .append(StringUtils.capitalize(weatherEntry.getCityName()))
                 .append(" на ближайшие сутки с шагом в 3 часа:\n\n");
-        List<HourlyData> hourlyData = rd.getHourly().getData();
+        List<HourlyData> hourlyData = weatherEntry.getWeatherResponseData().getHourly().getData();
         for (int i = 0; i < hourlyData.size(); i = i + 3) {
             HourlyData data = hourlyData.get(i);
             sb

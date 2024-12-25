@@ -1,10 +1,7 @@
 package com.taxah.weathersenderproject.bot;
 
 import com.taxah.weathersenderproject.model.subscriberEntity.Subscriber;
-import com.taxah.weathersenderproject.model.weatherEntity.City;
-import com.taxah.weathersenderproject.model.weatherEntity.Country;
-import com.taxah.weathersenderproject.model.weatherEntity.Location;
-import com.taxah.weathersenderproject.model.weatherEntity.WeatherResponseData;
+import com.taxah.weathersenderproject.model.weatherEntity.*;
 import com.taxah.weathersenderproject.model.subscriberEntity.dto.SubscriberDTO;
 import com.taxah.weathersenderproject.service.WeatherBotFacade;
 import lombok.Getter;
@@ -50,7 +47,7 @@ public class WeatherTelegramBot extends TelegramLongPollingBot {
     private final WeatherBotFacade botFacade;
     @Getter
     @Setter
-    private List<WeatherResponseData> weathers;
+    private List<WeatherEntry> weathers;
     @Getter
     private final ConcurrentHashMap<Long, SubscriberDTO> subscriberForms = new ConcurrentHashMap<>();
 
@@ -110,6 +107,8 @@ public class WeatherTelegramBot extends TelegramLongPollingBot {
                         .build();
                 botFacade.addSubscriber(subscriber);
                 sendTextMessage(chatId, "Вы успешно подписаны на ежедневные уведомления!");
+                System.out.println("Подписчик: " + subscriberDTO.getFirstName() + " " + chatId + " подписался");
+                subscriberForms.remove(chatId);
             }
         }
     }
@@ -120,20 +119,20 @@ public class WeatherTelegramBot extends TelegramLongPollingBot {
         message.setText("Выберите город: ");
 
         InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
-        List<List<InlineKeyboardButton>> rows = new ArrayList<>();
+        List<List<InlineKeyboardButton>> buttonsRows = new ArrayList<>();
 
         List<City> countries = botFacade.getAllCitiesBYCountryName(countryName);
         for (City city : countries) {
-            List<InlineKeyboardButton> row = new ArrayList<>();
+            List<InlineKeyboardButton> butonsList = new ArrayList<>();
             String cityName = city.getName();
-            row.add(InlineKeyboardButton.builder()
+            butonsList.add(InlineKeyboardButton.builder()
                     .text(cityName)
                     .callbackData("CITY_" + cityName)
                     .build());
-            rows.add(row);
+            buttonsRows.add(butonsList);
         }
 
-        keyboard.setKeyboard(rows);
+        keyboard.setKeyboard(buttonsRows);
         message.setReplyMarkup(keyboard);
 
         try {
@@ -149,20 +148,20 @@ public class WeatherTelegramBot extends TelegramLongPollingBot {
         message.setText("Выберите страну:");
 
         InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
-        List<List<InlineKeyboardButton>> rows = new ArrayList<>();
+        List<List<InlineKeyboardButton>> buttonsRows = new ArrayList<>();
 
         List<Country> countries = botFacade.getAllCountries();
         for (Country country : countries) {
-            List<InlineKeyboardButton> row = new ArrayList<>();
+            List<InlineKeyboardButton> butonsList = new ArrayList<>();
             String countryName = country.getName();
-            row.add(InlineKeyboardButton.builder()
+            butonsList.add(InlineKeyboardButton.builder()
                     .text(countryName)
                     .callbackData("COUNTRY_" + countryName)
                     .build());
-            rows.add(row);
+            buttonsRows.add(butonsList);
         }
 
-        keyboard.setKeyboard(rows);
+        keyboard.setKeyboard(buttonsRows);
         message.setReplyMarkup(keyboard);
 
         try {
@@ -202,9 +201,5 @@ public class WeatherTelegramBot extends TelegramLongPollingBot {
     @Override
     public String getBotUsername() {
         return this.botName;
-    }
-
-    public List<Subscriber> getSubscribers(){
-        return botFacade.getSubscribers();
     }
 }

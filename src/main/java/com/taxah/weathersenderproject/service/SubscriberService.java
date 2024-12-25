@@ -28,11 +28,6 @@ public class SubscriberService implements Iterable<Subscriber> {
     private final LocationRepository locationRepository;
     private final CityRepository cityRepository;
 
-    public void addSubscriber(String name, Long chatId) {
-        Subscriber subscriber = new Subscriber(name, chatId);
-        subscribers.add(subscriber);
-        subscriberRepository.save(subscriber);
-    }
 
     public void addSubscriber(Subscriber subscriber) {
         subscribers.add(subscriber);

@@ -3,10 +3,7 @@ package com.taxah.weathersenderproject.service;
 import com.taxah.weathersenderproject.model.decorator.WeatherPhotoDecorator;
 import com.taxah.weathersenderproject.model.decorator.WeatherTextDecorator;
 import com.taxah.weathersenderproject.model.subscriberEntity.Subscriber;
-import com.taxah.weathersenderproject.model.weatherEntity.City;
-import com.taxah.weathersenderproject.model.weatherEntity.Country;
-import com.taxah.weathersenderproject.model.weatherEntity.Location;
-import com.taxah.weathersenderproject.model.weatherEntity.WeatherResponseData;
+import com.taxah.weathersenderproject.model.weatherEntity.*;
 import lombok.Data;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
@@ -22,11 +19,6 @@ public class WeatherBotFacade {
     private final WeatherService weatherService;
     private final WeatherTextDecorator weatherTextDecorator;
     private final WeatherPhotoDecorator weatherPhotoDecorator;
-
-
-    public void addSubscriber(String firstName, Long chatId) {
-        subscriberService.addSubscriber(firstName, chatId);
-    }
 
     public void addSubscriber(Subscriber subscriber) {
         subscriberService.addSubscriber(subscriber);
@@ -44,8 +36,8 @@ public class WeatherBotFacade {
         subscriberService.fetchSubscribers();
     }
 
-    public String decorateText(WeatherResponseData weatherData, String cityName) {
-        return weatherTextDecorator.decorate(weatherData, cityName);
+    public String decorateText(WeatherEntry weatherEntry) {
+        return weatherTextDecorator.decorate(weatherEntry);
     }
 
     public InputFile decoratePhoto(WeatherResponseData weatherData) {
@@ -56,11 +48,11 @@ public class WeatherBotFacade {
         return weatherService.saveWeather(weatherData);
     }
 
-    public void saveWeathers(List<WeatherResponseData> weathers) {
-        weatherService.getWeatherRepository().saveAll(weathers);
+    public void saveWeathers(List<WeatherEntry> weathers) {
+        weatherService.saveWeathers(weathers);
     }
 
-    public List<WeatherResponseData> findWeatherByCreatedDay(LocalDate date) {
+    public List<WeatherEntry> findWeatherByCreatedDay(LocalDate date) {
         return weatherService.findByCreatedDay(date);
     }
 
@@ -84,7 +76,7 @@ public class WeatherBotFacade {
         return subscriberService.getAllCitiesBYCountryName(countryName);
     }
 
-    public List<WeatherResponseData> getDailyWeather() {
+    public List<WeatherEntry> getDailyWeather() {
         return weatherService.getDailyWeather();
     }
 

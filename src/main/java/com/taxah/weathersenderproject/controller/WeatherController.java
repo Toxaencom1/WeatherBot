@@ -1,6 +1,7 @@
 package com.taxah.weathersenderproject.controller;
 
 
+import com.taxah.weathersenderproject.model.weatherEntity.WeatherEntry;
 import com.taxah.weathersenderproject.model.weatherEntity.WeatherResponseData;
 import com.taxah.weathersenderproject.service.WeatherService;
 import lombok.Data;
@@ -20,10 +21,10 @@ public class WeatherController {
 
     @RequestMapping("/get")
     public WeatherResponseData getWeather() {
-        WeatherResponseData weather = service.getWeather("Almaty");
-        if (weather != null) {
+        WeatherEntry weather = service.getWeather("Almaty");
+        if (weather.getWeatherResponseData() != null) {
             System.out.println("Weather gathered!!! " + LocalDateTime.now());
         }
-        return weather;
+        return weather.getWeatherResponseData();
     }
 }

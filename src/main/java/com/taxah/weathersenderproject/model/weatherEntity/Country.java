@@ -21,7 +21,7 @@ public class Country {
 
     private String name;
 
-    @OneToMany(mappedBy = "country", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "country", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<City> cities = new ArrayList<>();
 
     public void addCity(City city) {
