@@ -7,7 +7,6 @@ import com.taxah.weathersenderproject.repository.CityRepository;
 import com.taxah.weathersenderproject.repository.WeatherEntryRepository;
 import com.taxah.weathersenderproject.repository.WeatherResponseDataRepository;
 import lombok.Data;
-import org.apache.commons.collections4.keyvalue.DefaultMapEntry;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -22,7 +21,6 @@ import java.net.URI;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @Data

@@ -2,7 +2,6 @@ package com.taxah.weathersenderproject.model.decorator;
 
 import com.taxah.weathersenderproject.model.weatherEntity.HourlyData;
 import com.taxah.weathersenderproject.model.weatherEntity.WeatherEntry;
-import com.taxah.weathersenderproject.model.weatherEntity.WeatherResponseData;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;

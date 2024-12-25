@@ -4,7 +4,6 @@ import com.taxah.weathersenderproject.bot.WeatherTelegramBot;
 import com.taxah.weathersenderproject.model.subscriberEntity.Subscriber;
 import com.taxah.weathersenderproject.model.weatherEntity.City;
 import com.taxah.weathersenderproject.model.weatherEntity.WeatherEntry;
-import com.taxah.weathersenderproject.model.weatherEntity.WeatherResponseData;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;

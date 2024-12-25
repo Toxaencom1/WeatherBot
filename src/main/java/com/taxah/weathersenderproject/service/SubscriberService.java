@@ -9,6 +9,7 @@ import com.taxah.weathersenderproject.repository.CountryRepository;
 import com.taxah.weathersenderproject.repository.LocationRepository;
 import com.taxah.weathersenderproject.repository.SubscriberRepository;
 import lombok.Data;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +40,7 @@ public class SubscriberService implements Iterable<Subscriber> {
         subscriberRepository.deleteByChatId(chatId);
     }
 
+    @NonNull
     @Override
     public Iterator<Subscriber> iterator() {
         return subscribers.iterator();
