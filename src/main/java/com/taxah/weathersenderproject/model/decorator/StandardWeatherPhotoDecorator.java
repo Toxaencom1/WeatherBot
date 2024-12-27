@@ -79,6 +79,11 @@ public class StandardWeatherPhotoDecorator implements WeatherPhotoDecorator {
             System.out.println(sb5);
 
             File outputFile = new File("src/main/resources/static/weatherTable.png");
+
+            File parentDir = outputFile.getParentFile();
+            if (!parentDir.exists()) {
+                parentDir.mkdirs();  // Создает все необходимые родительские директории
+            }
             try {
                 ImageIO.write(image, "png", outputFile);
             } catch (IOException e) {

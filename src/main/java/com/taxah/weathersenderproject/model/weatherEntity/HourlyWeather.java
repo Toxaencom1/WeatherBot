@@ -11,7 +11,6 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -22,7 +21,7 @@ public class HourlyWeather {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.EAGER)
     private List<HourlyData> data = new ArrayList<>();
 
     @Override

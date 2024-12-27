@@ -10,7 +10,4 @@ import java.util.List;
 
 @Repository
 public interface WeatherResponseDataRepository extends JpaRepository<WeatherResponseData, Long> {
-
-    @EntityGraph(attributePaths = {"current.wind", "current.precipitation", "hourly.data.wind", "hourly.data.cloudCover", "hourly.data.precipitation"})
-    List<WeatherResponseData> findByCreatedDay(LocalDate date);
 }

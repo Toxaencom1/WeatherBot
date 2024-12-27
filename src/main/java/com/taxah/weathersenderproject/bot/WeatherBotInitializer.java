@@ -26,11 +26,13 @@ public class WeatherBotInitializer {
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
 
         WeatherBotFacade botFacade = bot.getBotFacade();
-        if (bot.getBotFacade().isLocationsEmpty()) {
-            bot.getBotFacade().fillLocations();
+        if (botFacade.isLocationsEmpty()) {
+            botFacade.fillLocations();
         }
 
-        List<WeatherEntry> byTodayWeather = botFacade.findWeatherByCreatedDay(LocalDate.now());
+        LocalDate now = LocalDate.now();
+
+        List<WeatherEntry> byTodayWeather = botFacade.findWeatherByCreatedDay(now);
         botFacade.fetchSubscribers();
 
         if (byTodayWeather != null && !byTodayWeather.isEmpty()) {
@@ -39,6 +41,7 @@ public class WeatherBotInitializer {
             List<WeatherEntry> weather = botFacade.getDailyWeather();
             bot.setWeathers(weather);
             botFacade.saveWeathers(weather);
+            botFacade.deleteAllByDateBeforeOrEqual(now.minusDays(1));
         }
         telegramBotsApi.registerBot(bot);
     }

@@ -21,9 +21,10 @@ public class SubscribersNotificationService {
     public void sendDailyMessages() {
         WeatherBotFacade botFacade = bot.getBotFacade();
         List<WeatherEntry> weathers = bot.getWeathers();
+        List<Subscriber> subscribers = botFacade.getSubscribers();
 
-        if (weathers != null && !weathers.isEmpty()) {
-            for (Subscriber subscriber : botFacade.getSubscribers()) {
+        if (weathers != null && !weathers.isEmpty() && subscribers != null && !subscribers.isEmpty()) {
+            for (Subscriber subscriber : subscribers) {
                 City city = subscriber.getLocation().getCity();
                 WeatherEntry weather = weathers.stream()
                         .filter(entry -> entry.getCityName().equals(city.getName()))

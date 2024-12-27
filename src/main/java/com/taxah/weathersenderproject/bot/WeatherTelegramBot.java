@@ -1,12 +1,18 @@
 package com.taxah.weathersenderproject.bot;
 
+import com.taxah.weathersenderproject.constants.BotConstants;
+import com.taxah.weathersenderproject.constants.LogConstants;
 import com.taxah.weathersenderproject.model.subscriberEntity.Subscriber;
-import com.taxah.weathersenderproject.model.weatherEntity.*;
 import com.taxah.weathersenderproject.model.subscriberEntity.dto.SubscriberDTO;
+import com.taxah.weathersenderproject.model.weatherEntity.City;
+import com.taxah.weathersenderproject.model.weatherEntity.Country;
+import com.taxah.weathersenderproject.model.weatherEntity.Location;
+import com.taxah.weathersenderproject.model.weatherEntity.WeatherEntry;
 import com.taxah.weathersenderproject.service.WeatherBotFacade;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -17,30 +23,13 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 public class WeatherTelegramBot extends TelegramLongPollingBot {
-
-    private static final String START_MESSAGE = """
-            Приветствую Семья и Родственники
-            Я написал полезное приложение по получению погоды
-            из доступных источников, в случае вашей подписки
-            на этот телеграм бот будет отправляться сообщение
-            и данные о погоде на сутки.
-            Для просмотра всех команд введите - "/help"
-            Для подписки на бота - "/subscribe",
-            а для отмены подписки на бота - "/unsubscribe".
-            """;
-
-    private static final String HELP_MESSAGE = """
-            Команды для бота:
-            /start - для приветственного сообщения
-            /subscribe - для подписки на бота
-            /unsubscribe - для отмены подписки на бота
-            """;
 
     private final String botName;
     @Getter
@@ -68,36 +57,38 @@ public class WeatherTelegramBot extends TelegramLongPollingBot {
             long chatId = update.getMessage().getChatId();
             String messageText = update.getMessage().getText();
 
-            if (messageText.equalsIgnoreCase("/start")) {
-                sendTextMessage(chatId, START_MESSAGE);
-            } else if (messageText.equalsIgnoreCase("/subscribe")) {
+            if (messageText.equalsIgnoreCase(BotConstants.COMMAND_START)) {
+                sendTextMessage(chatId, BotConstants.START_MESSAGE);
+            } else if (messageText.equalsIgnoreCase(BotConstants.COMMAND_SUBSCRIBE)) {
                 if (botFacade.checkIfSubscriberExists(chatId)) {
-                    sendTextMessage(chatId, "Вы уже подписаны на ежедневные уведомления!");
+                    sendTextMessage(chatId, BotConstants.ALREADY_SUBSCRIBED_TO_DAILY_NOTIFICATIONS);
                 } else {
+                    System.out.println(LogConstants.INITIALIZING_USER_REGISTRATION);
                     subscriberForms.put(chatId, SubscriberDTO.builder().firstName(firstName).build());
                     sendCountrySelection(chatId);
+                    System.out.println(LogConstants.COUNTRY_SELECT);
                 }
-            } else if (messageText.equalsIgnoreCase("/unsubscribe")) {
+            } else if (messageText.equalsIgnoreCase(BotConstants.COMMAND_UNSUBSCRIBE)) {
                 botFacade.removeSubscriber(chatId);
-                sendTextMessage(chatId, "Вы успешно отписались от уведомлений!");
-                System.out.println("Подписчик: " + firstName + " " + chatId + " отписался");
-            } else if (messageText.equalsIgnoreCase("/help")) {
-                sendTextMessage(chatId, HELP_MESSAGE);
+                sendTextMessage(chatId, BotConstants.SUCCESSFULLY_UNSUBSCRIBED_FROM_NOTIFICATIONS);
+                System.out.println(LogConstants.unsubscribe(firstName, chatId, LocalDate.now()));
+            } else if (messageText.equalsIgnoreCase(BotConstants.COMMAND_HELP)) {
+                sendTextMessage(chatId, BotConstants.HELP_MESSAGE);
             } else {
-                sendTextMessage(chatId, "Такой команды нет. Введите \"/help\" для просмотра доступных команд");
+                sendTextMessage(chatId, BotConstants.NO_SUCH_COMMAND);
             }
         } else if (update.hasCallbackQuery()) {
             String callbackData = update.getCallbackQuery().getData();
             long chatId = update.getCallbackQuery().getMessage().getChatId();
 
             SubscriberDTO subscriberDTO = subscriberForms.get(chatId);
-            if (callbackData.startsWith("COUNTRY_")) {
-                String countryName = callbackData.replace("COUNTRY_", "");
+            if (callbackData.startsWith(BotConstants.COUNTRY_PREFIX)) {
+                String countryName = callbackData.replace(BotConstants.COUNTRY_PREFIX, "");
                 subscriberDTO.setCountry(countryName);
                 sendCitySelection(chatId, countryName);
-
-            } else if (callbackData.startsWith("CITY_")) {
-                String cityName = callbackData.replace("CITY_", "");
+                System.out.println(LogConstants.SELECT_CITY);
+            } else if (callbackData.startsWith(BotConstants.CITY_PREFIX)) {
+                String cityName = callbackData.replace(BotConstants.CITY_PREFIX, "");
                 subscriberDTO.setCity(cityName);
                 Location location = botFacade.getLocation(subscriberDTO.getCountry(), subscriberDTO.getCity());
                 Subscriber subscriber = Subscriber.builder()
@@ -106,8 +97,8 @@ public class WeatherTelegramBot extends TelegramLongPollingBot {
                         .location(location)
                         .build();
                 botFacade.addSubscriber(subscriber);
-                sendTextMessage(chatId, "Вы успешно подписаны на ежедневные уведомления!");
-                System.out.println("Подписчик: " + subscriberDTO.getFirstName() + " " + chatId + " подписался");
+                sendTextMessage(chatId, BotConstants.SUCCESSFULLY_SUBSCRIBED_TO_DAILY_NOTIFICATIONS);
+                System.out.println(LogConstants.subscribe(subscriberDTO.getFirstName(), chatId, LocalDate.now()));
                 subscriberForms.remove(chatId);
             }
         }
@@ -116,7 +107,7 @@ public class WeatherTelegramBot extends TelegramLongPollingBot {
     private void sendCitySelection(long chatId, String countryName) {
         SendMessage message = new SendMessage();
         message.setChatId(chatId);
-        message.setText("Выберите город: ");
+        message.setText(BotConstants.SELECT_CITY);
 
         InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> buttonsRows = new ArrayList<>();
@@ -127,7 +118,7 @@ public class WeatherTelegramBot extends TelegramLongPollingBot {
             String cityName = city.getName();
             butonsList.add(InlineKeyboardButton.builder()
                     .text(cityName)
-                    .callbackData("CITY_" + cityName)
+                    .callbackData(BotConstants.CITY_PREFIX + cityName)
                     .build());
             buttonsRows.add(butonsList);
         }
@@ -145,7 +136,7 @@ public class WeatherTelegramBot extends TelegramLongPollingBot {
     private void sendCountrySelection(long chatId) {
         SendMessage message = new SendMessage();
         message.setChatId(chatId);
-        message.setText("Выберите страну:");
+        message.setText(BotConstants.SELECT_COUNTRY);
 
         InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> buttonsRows = new ArrayList<>();
@@ -156,7 +147,7 @@ public class WeatherTelegramBot extends TelegramLongPollingBot {
             String countryName = country.getName();
             butonsList.add(InlineKeyboardButton.builder()
                     .text(countryName)
-                    .callbackData("COUNTRY_" + countryName)
+                    .callbackData(BotConstants.COUNTRY_PREFIX + countryName)
                     .build());
             buttonsRows.add(butonsList);
         }
@@ -194,8 +185,14 @@ public class WeatherTelegramBot extends TelegramLongPollingBot {
                 e.printStackTrace(System.out);
             }
         } else {
-            sendTextMessage(chatId, "Ошибка получения погоды и файла");
+            sendTextMessage(chatId, BotConstants.ERROR_TEXT_MESSAGE);
         }
+    }
+
+    @Scheduled(cron = "${weather.cron}")
+    public void setDailyWeather() {
+        this.weathers = botFacade.getDailyWeather();
+        botFacade.deleteAllByDateBeforeOrEqual(LocalDate.now().minusDays(1));
     }
 
     @Override

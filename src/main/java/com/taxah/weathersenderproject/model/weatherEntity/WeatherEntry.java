@@ -9,11 +9,11 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
+@Table(name = "weather_entry")
 public class WeatherEntry {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

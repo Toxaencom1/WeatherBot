@@ -4,6 +4,7 @@ import com.taxah.weathersenderproject.model.decorator.WeatherPhotoDecorator;
 import com.taxah.weathersenderproject.model.decorator.WeatherTextDecorator;
 import com.taxah.weathersenderproject.model.subscriberEntity.Subscriber;
 import com.taxah.weathersenderproject.model.weatherEntity.*;
+import com.taxah.weathersenderproject.repository.WeatherEntryRepository;
 import lombok.Data;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
@@ -19,6 +20,7 @@ public class WeatherBotFacade {
     private final WeatherService weatherService;
     private final WeatherTextDecorator weatherTextDecorator;
     private final WeatherPhotoDecorator weatherPhotoDecorator;
+    private final WeatherEntryRepository weatherEntryRepository;
 
     public void addSubscriber(Subscriber subscriber) {
         subscriberService.addSubscriber(subscriber);
@@ -42,10 +44,6 @@ public class WeatherBotFacade {
 
     public InputFile decoratePhoto(WeatherResponseData weatherData) {
         return weatherPhotoDecorator.decorate(weatherData);
-    }
-
-    public WeatherResponseData saveWeather(WeatherResponseData weatherData) {
-        return weatherService.saveWeather(weatherData);
     }
 
     public void saveWeathers(List<WeatherEntry> weathers) {
@@ -82,5 +80,10 @@ public class WeatherBotFacade {
 
     public List<Subscriber> getSubscribers() {
         return subscriberService.getSubscribers();
+    }
+
+    public void deleteAllByDateBeforeOrEqual(LocalDate date) {
+        weatherEntryRepository.deleteAllByDateBeforeOrEqual(date);
+
     }
 }

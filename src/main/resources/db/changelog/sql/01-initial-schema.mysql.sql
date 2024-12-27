@@ -146,8 +146,8 @@ CREATE UNIQUE INDEX UKm85ykplv4jfmmi7u8rokmuvk4 ON weather_response_data (curren
 -- changeset TaXaH:1734789970892-19
 CREATE UNIQUE INDEX UKmkpe6xom1hhuj1b86v8c5dmy9 ON hourly_weather_data (data_id);
 
--- changeset TaXaH:1734789970892-20
-CREATE UNIQUE INDEX UKnhf843alxhax27wl7pdt87xrb ON subscriber (location_id);
+# -- changeset TaXaH:1734789970892-20
+# CREATE UNIQUE INDEX UKnhf843alxhax27wl7pdt87xrb ON subscriber (location_id);
 
 -- changeset TaXaH:1734789970892-21
 # CREATE UNIQUE INDEX UKoij09nrgw3jac87nxirlho8cj ON location (country_id);
