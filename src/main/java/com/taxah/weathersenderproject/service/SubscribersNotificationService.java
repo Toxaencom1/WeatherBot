@@ -35,4 +35,12 @@ public class SubscribersNotificationService {
             }
         }
     }
+
+    public void sendOrdinaryMessage(String message) {
+        WeatherBotFacade botFacade = bot.getBotFacade();
+        List<Subscriber> subscribers = botFacade.getSubscribers();
+        for (Subscriber subscriber : subscribers) {
+            bot.sendTextMessage(subscriber.getChatId(), message);
+        }
+    }
 }

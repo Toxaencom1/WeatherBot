@@ -59,7 +59,7 @@ public class WeatherService {
     }
 
     public List<WeatherEntry> findByCreatedDay(LocalDate date) {
-        return weatherEntryRepository.findByWeatherResponseDataCreatedDay(date);
+        return weatherEntryRepository.findByWeatherResponseData_CreatedDay(date);
     }
 
     public void saveWeathers(List<WeatherEntry> weathers) {
@@ -67,7 +67,7 @@ public class WeatherService {
     }
 
     public List<WeatherEntry> getDailyWeather() {
-        List<WeatherEntry> weathersData = weatherEntryRepository.findByWeatherResponseDataCreatedDay(LocalDate.now());
+        List<WeatherEntry> weathersData = weatherEntryRepository.findByWeatherResponseData_CreatedDay(LocalDate.now());
         if (weathersData.isEmpty()) {
             List<City> cities = cityRepository.findAll();
             for (City city : cities) {

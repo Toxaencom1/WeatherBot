@@ -1,30 +1,28 @@
 package com.taxah.weathersenderproject.controller;
 
 
-import com.taxah.weathersenderproject.model.weatherEntity.WeatherEntry;
-import com.taxah.weathersenderproject.model.weatherEntity.WeatherResponseData;
-import com.taxah.weathersenderproject.service.WeatherService;
+import com.taxah.weathersenderproject.service.WeatherBotFacade;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Data
 @RestController
-@RequestMapping
+@RequestMapping("/weather")
 @RequiredArgsConstructor
 public class WeatherController {
 
-    private final WeatherService service;
+    private final WeatherBotFacade facade;
 
-    @RequestMapping("/get")
-    public WeatherResponseData getWeather() {
-        WeatherEntry weather = service.getWeather("Almaty");
-        if (weather.getWeatherResponseData() != null) {
-            System.out.println("Weather gathered!!! " + LocalDateTime.now());
-        }
-        return weather.getWeatherResponseData();
+    @DeleteMapping("/clear/old/weather/entry")
+    public ResponseEntity<String> clearOldWeatherResponseData() {
+        facade.deleteAllOtherWeathersByDate(LocalDate.now());
+        return ResponseEntity.status(HttpStatus.OK).body("Удаление завершено");
     }
 }

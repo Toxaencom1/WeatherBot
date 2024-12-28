@@ -82,8 +82,9 @@ public class WeatherBotFacade {
         return subscriberService.getSubscribers();
     }
 
-    public void deleteAllByDateBeforeOrEqual(LocalDate date) {
-        weatherEntryRepository.deleteAllByDateBeforeOrEqual(date);
-
+    public void deleteAllOtherWeathersByDate(LocalDate date) {
+        List<WeatherEntry> weatherEntryList = weatherEntryRepository.findAll();
+        weatherEntryList = weatherEntryList.stream().filter(entry -> !entry.getWeatherResponseData().getCreatedDay().equals(date)).toList();
+        weatherEntryRepository.deleteAll(weatherEntryList);
     }
 }

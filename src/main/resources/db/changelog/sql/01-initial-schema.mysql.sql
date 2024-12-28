@@ -3,8 +3,8 @@
 -- changeset TaXaH:1734789970892-1
 CREATE TABLE city
 (
-    country_id BIGINT                NULL,
     id         BIGINT AUTO_INCREMENT NOT NULL,
+    country_id BIGINT                NULL,
     name       VARCHAR(255)          NULL,
     CONSTRAINT PK_CITY PRIMARY KEY (id)
 );
@@ -12,8 +12,8 @@ CREATE TABLE city
 -- changeset TaXaH:1734789970892-2
 CREATE TABLE cloud_cover
 (
-    total INT                   NOT NULL,
     id    BIGINT AUTO_INCREMENT NOT NULL,
+    total INT                   NOT NULL,
     CONSTRAINT PK_CLOUD_COVER PRIMARY KEY (id)
 );
 
@@ -28,10 +28,10 @@ CREATE TABLE country
 -- changeset TaXaH:1734789970892-4
 CREATE TABLE current_weather
 (
+    id               BIGINT AUTO_INCREMENT NOT NULL,
+    temperature      DOUBLE                NOT NULL,
     cloud_cover      INT                   NOT NULL,
     icon_num         INT                   NOT NULL,
-    temperature      DOUBLE                NOT NULL,
-    id               BIGINT AUTO_INCREMENT NOT NULL,
     precipitation_id BIGINT                NULL,
     wind_id          BIGINT                NULL,
     icon             VARCHAR(255)          NULL,
@@ -42,11 +42,11 @@ CREATE TABLE current_weather
 -- changeset TaXaH:1734789970892-5
 CREATE TABLE hourly_data
 (
-    icon             INT                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         NOT NULL,
-    temperature      DOUBLE                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      NOT NULL,
-    cloud_cover_id   BIGINT                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      NULL,
-    date             datetime(6)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 NULL,
     id               BIGINT AUTO_INCREMENT                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       NOT NULL,
+    date             datetime(6)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 NULL,
+    temperature      DOUBLE                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      NOT NULL,
+    icon             INT                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         NOT NULL,
+    cloud_cover_id   BIGINT                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      NULL,
     precipitation_id BIGINT                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      NULL,
     wind_id          BIGINT                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      NULL,
     weather          VARCHAR(255)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                NULL,
@@ -74,9 +74,9 @@ CREATE TABLE hourly_weather_data
 -- changeset TaXaH:1734789970892-8
 CREATE TABLE location
 (
-    city_id    BIGINT                NULL,
-    country_id BIGINT                NULL,
     id         BIGINT AUTO_INCREMENT NOT NULL,
+    country_id BIGINT                NULL,
+    city_id    BIGINT                NULL,
     CONSTRAINT PK_LOCATION PRIMARY KEY (id),
     UNIQUE (city_id)
 );
@@ -84,30 +84,30 @@ CREATE TABLE location
 -- changeset TaXaH:1734789970892-9
 CREATE TABLE precipitation
 (
-    total DOUBLE                                                                   NOT NULL,
     id    BIGINT AUTO_INCREMENT                                                    NOT NULL,
     type  ENUM ('FROZEN_RAIN', 'ICE_PELLETS', 'NONE', 'RAIN', 'RAIN_SNOW', 'SNOW') NOT NULL,
+    total DOUBLE                                                                   NOT NULL,
     CONSTRAINT PK_PRECIPITATION PRIMARY KEY (id)
 );
 
 -- changeset TaXaH:1734789970892-10
 CREATE TABLE subscriber
 (
-    chat_id     BIGINT                NULL,
     id          BIGINT AUTO_INCREMENT NOT NULL,
-    location_id BIGINT                NULL,
+    chat_id     BIGINT                NULL,
     name        VARCHAR(255)          NULL,
+    location_id BIGINT                NULL,
     CONSTRAINT PK_SUBSCRIBER PRIMARY KEY (id)
 );
 
 -- changeset TaXaH:1734789970892-11
 CREATE TABLE weather_response_data
 (
+    id                 BIGINT AUTO_INCREMENT NOT NULL,
     created_day        date                  NULL,
     elevation          INT                   NOT NULL,
     current_weather_id BIGINT                NULL,
     hourly_weather_id  BIGINT                NULL,
-    id                 BIGINT AUTO_INCREMENT NOT NULL,
     lat                VARCHAR(255)          NULL,
     lon                VARCHAR(255)          NULL,
     timezone           VARCHAR(255)          NULL,
@@ -118,9 +118,9 @@ CREATE TABLE weather_response_data
 -- changeset TaXaH:1734789970892-12
 CREATE TABLE wind
 (
+    id    BIGINT AUTO_INCREMENT NOT NULL,
     angle INT                   NOT NULL,
     speed DOUBLE                NOT NULL,
-    id    BIGINT AUTO_INCREMENT NOT NULL,
     dir   VARCHAR(255)          NULL,
     CONSTRAINT PK_WIND PRIMARY KEY (id)
 );

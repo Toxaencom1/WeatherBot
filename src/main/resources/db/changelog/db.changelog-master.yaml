@@ -7,7 +7,7 @@ databaseChangeLog:
       author: Toxaencom1
       changes:
         - sqlFile:
-            path: classpath:/db/changelog/sql/add_defaults_countries_and_cities.sql
+            path: classpath:/db/changelog/sql/add_weatherEntry_table.sql
             encoding: UTF-8
 
   - changeSet:
@@ -15,5 +15,5 @@ databaseChangeLog:
       author: Toxaencom1
       changes:
         - sqlFile:
-            path: classpath:/db/changelog/sql/add_weatherEntry_table.sql
+            path: classpath:/db/changelog/sql/add_defaults_countries_and_cities.sql
             encoding: UTF-8

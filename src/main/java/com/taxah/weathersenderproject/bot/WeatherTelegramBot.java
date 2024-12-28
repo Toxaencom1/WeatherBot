@@ -24,6 +24,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -71,7 +72,7 @@ public class WeatherTelegramBot extends TelegramLongPollingBot {
             } else if (messageText.equalsIgnoreCase(BotConstants.COMMAND_UNSUBSCRIBE)) {
                 botFacade.removeSubscriber(chatId);
                 sendTextMessage(chatId, BotConstants.SUCCESSFULLY_UNSUBSCRIBED_FROM_NOTIFICATIONS);
-                System.out.println(LogConstants.unsubscribe(firstName, chatId, LocalDate.now()));
+                System.out.println(LogConstants.unsubscribe(firstName, chatId, LocalDateTime.now()));
             } else if (messageText.equalsIgnoreCase(BotConstants.COMMAND_HELP)) {
                 sendTextMessage(chatId, BotConstants.HELP_MESSAGE);
             } else {
@@ -98,7 +99,7 @@ public class WeatherTelegramBot extends TelegramLongPollingBot {
                         .build();
                 botFacade.addSubscriber(subscriber);
                 sendTextMessage(chatId, BotConstants.SUCCESSFULLY_SUBSCRIBED_TO_DAILY_NOTIFICATIONS);
-                System.out.println(LogConstants.subscribe(subscriberDTO.getFirstName(), chatId, LocalDate.now()));
+                System.out.println(LogConstants.subscribe(subscriberDTO.getFirstName(), chatId, LocalDateTime.now()));
                 subscriberForms.remove(chatId);
             }
         }
@@ -192,7 +193,7 @@ public class WeatherTelegramBot extends TelegramLongPollingBot {
     @Scheduled(cron = "${weather.cron}")
     public void setDailyWeather() {
         this.weathers = botFacade.getDailyWeather();
-        botFacade.deleteAllByDateBeforeOrEqual(LocalDate.now().minusDays(1));
+        botFacade.deleteAllOtherWeathersByDate(LocalDate.now());
     }
 
     @Override
