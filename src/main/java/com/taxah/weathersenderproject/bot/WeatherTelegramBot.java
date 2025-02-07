@@ -1,14 +1,12 @@
 package com.taxah.weathersenderproject.bot;
 
-import com.taxah.weathersenderproject.constants.BotConstants;
-import com.taxah.weathersenderproject.constants.LogConstants;
-import com.taxah.weathersenderproject.model.subscriberEntity.Subscriber;
 import com.taxah.weathersenderproject.model.subscriberEntity.dto.SubscriberDTO;
 import com.taxah.weathersenderproject.model.weatherEntity.City;
 import com.taxah.weathersenderproject.model.weatherEntity.Country;
-import com.taxah.weathersenderproject.model.weatherEntity.Location;
 import com.taxah.weathersenderproject.model.weatherEntity.WeatherEntry;
 import com.taxah.weathersenderproject.service.WeatherBotFacade;
+import com.taxah.weathersenderproject.service.onReceiveStrategy.OnReceiveStrategy;
+import com.taxah.weathersenderproject.service.onReceiveStrategy.OnReceiveStrategyResolver;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,10 +22,11 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+
+import static com.taxah.weathersenderproject.constants.BotConstants.*;
 
 @Component
 public class WeatherTelegramBot extends TelegramLongPollingBot {
@@ -40,75 +39,42 @@ public class WeatherTelegramBot extends TelegramLongPollingBot {
     private List<WeatherEntry> weathers;
     @Getter
     private final ConcurrentHashMap<Long, SubscriberDTO> subscriberForms = new ConcurrentHashMap<>();
+    private final OnReceiveStrategyResolver onReceiveStrategyResolver;
 
 
     public WeatherTelegramBot(@Value("${bot.token}") String botToken,
                               @Value("${bot.name}") String botName,
-                              WeatherBotFacade botFacade) {
+                              WeatherBotFacade botFacade,
+                              OnReceiveStrategyResolver onReceiveStrategyResolver) {
         super(botToken);
         this.botName = botName;
         this.botFacade = botFacade;
         this.weathers = new ArrayList<>();
+        this.onReceiveStrategyResolver = onReceiveStrategyResolver;
     }
 
     @Override
     public void onUpdateReceived(Update update) {
-        if (update.hasMessage() && update.getMessage().hasText()) {
-            String firstName = update.getMessage().getFrom().getUserName();
-            long chatId = update.getMessage().getChatId();
-            String messageText = update.getMessage().getText();
-
-            if (messageText.equalsIgnoreCase(BotConstants.COMMAND_START)) {
-                sendTextMessage(chatId, BotConstants.START_MESSAGE);
-            } else if (messageText.equalsIgnoreCase(BotConstants.COMMAND_SUBSCRIBE)) {
-                if (botFacade.checkIfSubscriberExists(chatId)) {
-                    sendTextMessage(chatId, BotConstants.ALREADY_SUBSCRIBED_TO_DAILY_NOTIFICATIONS);
-                } else {
-                    System.out.println(LogConstants.INITIALIZING_USER_REGISTRATION);
-                    subscriberForms.put(chatId, SubscriberDTO.builder().firstName(firstName).build());
-                    sendCountrySelection(chatId);
-                    System.out.println(LogConstants.COUNTRY_SELECT);
-                }
-            } else if (messageText.equalsIgnoreCase(BotConstants.COMMAND_UNSUBSCRIBE)) {
-                botFacade.removeSubscriber(chatId);
-                sendTextMessage(chatId, BotConstants.SUCCESSFULLY_UNSUBSCRIBED_FROM_NOTIFICATIONS);
-                System.out.println(LogConstants.unsubscribe(firstName, chatId, LocalDateTime.now()));
-            } else if (messageText.equalsIgnoreCase(BotConstants.COMMAND_HELP)) {
-                sendTextMessage(chatId, BotConstants.HELP_MESSAGE);
-            } else {
-                sendTextMessage(chatId, BotConstants.NO_SUCH_COMMAND);
-            }
-        } else if (update.hasCallbackQuery()) {
-            String callbackData = update.getCallbackQuery().getData();
-            long chatId = update.getCallbackQuery().getMessage().getChatId();
-
-            SubscriberDTO subscriberDTO = subscriberForms.get(chatId);
-            if (callbackData.startsWith(BotConstants.COUNTRY_PREFIX)) {
-                String countryName = callbackData.replace(BotConstants.COUNTRY_PREFIX, "");
-                subscriberDTO.setCountry(countryName);
-                sendCitySelection(chatId, countryName);
-                System.out.println(LogConstants.SELECT_CITY);
-            } else if (callbackData.startsWith(BotConstants.CITY_PREFIX)) {
-                String cityName = callbackData.replace(BotConstants.CITY_PREFIX, "");
-                subscriberDTO.setCity(cityName);
-                Location location = botFacade.getLocation(subscriberDTO.getCountry(), subscriberDTO.getCity());
-                Subscriber subscriber = Subscriber.builder()
-                        .name(subscriberDTO.getFirstName())
-                        .chatId(chatId)
-                        .location(location)
-                        .build();
-                botFacade.addSubscriber(subscriber);
-                sendTextMessage(chatId, BotConstants.SUCCESSFULLY_SUBSCRIBED_TO_DAILY_NOTIFICATIONS);
-                System.out.println(LogConstants.subscribe(subscriberDTO.getFirstName(), chatId, LocalDateTime.now()));
-                subscriberForms.remove(chatId);
-            }
-        }
+        OnReceiveStrategy chosenStrategy = onReceiveStrategyResolver.resolveStrategy(update);
+        chosenStrategy.apply(update, this);
     }
 
-    private void sendCitySelection(long chatId, String countryName) {
+    public void putToSubscriberForms(long chatId, String firstName) {
+        subscriberForms.put(chatId, SubscriberDTO.builder().firstName(firstName).build());
+    }
+
+    public SubscriberDTO getSubscriberDtoFromForms(long chatId) {
+        return subscriberForms.get(chatId);
+    }
+
+    public void removeFromForms(long chatId) {
+        subscriberForms.remove(chatId);
+    }
+
+    public void sendCitySelection(long chatId, String countryName) {
         SendMessage message = new SendMessage();
         message.setChatId(chatId);
-        message.setText(BotConstants.SELECT_CITY);
+        message.setText(SELECT_CITY);
 
         InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> buttonsRows = new ArrayList<>();
@@ -119,7 +85,7 @@ public class WeatherTelegramBot extends TelegramLongPollingBot {
             String cityName = city.getName();
             butonsList.add(InlineKeyboardButton.builder()
                     .text(cityName)
-                    .callbackData(BotConstants.CITY_PREFIX + cityName)
+                    .callbackData(CITY_PREFIX + cityName)
                     .build());
             buttonsRows.add(butonsList);
         }
@@ -134,10 +100,10 @@ public class WeatherTelegramBot extends TelegramLongPollingBot {
         }
     }
 
-    private void sendCountrySelection(long chatId) {
+    public void sendCountrySelection(long chatId) {
         SendMessage message = new SendMessage();
         message.setChatId(chatId);
-        message.setText(BotConstants.SELECT_COUNTRY);
+        message.setText(SELECT_COUNTRY);
 
         InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> buttonsRows = new ArrayList<>();
@@ -148,7 +114,7 @@ public class WeatherTelegramBot extends TelegramLongPollingBot {
             String countryName = country.getName();
             butonsList.add(InlineKeyboardButton.builder()
                     .text(countryName)
-                    .callbackData(BotConstants.COUNTRY_PREFIX + countryName)
+                    .callbackData(COUNTRY_PREFIX + countryName)
                     .build());
             buttonsRows.add(butonsList);
         }
@@ -186,7 +152,7 @@ public class WeatherTelegramBot extends TelegramLongPollingBot {
                 e.printStackTrace(System.out);
             }
         } else {
-            sendTextMessage(chatId, BotConstants.ERROR_TEXT_MESSAGE);
+            sendTextMessage(chatId, ERROR_TEXT_MESSAGE);
         }
     }
 
@@ -200,4 +166,58 @@ public class WeatherTelegramBot extends TelegramLongPollingBot {
     public String getBotUsername() {
         return this.botName;
     }
+
+//    @Override
+//    public void onUpdateReceived(Update update) {
+//        if (update.hasMessage() && update.getMessage().hasText()) {
+//            String firstName = update.getMessage().getFrom().getUserName();
+//            long chatId = update.getMessage().getChatId();
+//            String messageText = update.getMessage().getText();
+//
+//            if (messageText.equalsIgnoreCase(COMMAND_START)) {
+//                sendTextMessage(chatId, START_MESSAGE);
+//            } else if (messageText.equalsIgnoreCase(COMMAND_SUBSCRIBE)) {
+//                if (botFacade.checkIfSubscriberExists(chatId)) {
+//                    sendTextMessage(chatId, ALREADY_SUBSCRIBED_TO_DAILY_NOTIFICATIONS);
+//                } else {
+//                    System.out.println(LogConstants.INITIALIZING_USER_REGISTRATION);
+//                    putToSubscriberForms(chatId, firstName);
+//                    sendCountrySelection(chatId);
+//                    System.out.println(LogConstants.COUNTRY_SELECT);
+//                }
+//            } else if (messageText.equalsIgnoreCase(COMMAND_UNSUBSCRIBE)) {
+//                botFacade.removeSubscriber(chatId);
+//                sendTextMessage(chatId, SUCCESSFULLY_UNSUBSCRIBED_FROM_NOTIFICATIONS);
+//                System.out.println(LogConstants.unsubscribe(firstName, chatId, LocalDateTime.now()));
+//            } else if (messageText.equalsIgnoreCase(COMMAND_HELP)) {
+//                sendTextMessage(chatId, HELP_MESSAGE);
+//            } else {
+//                sendTextMessage(chatId, NO_SUCH_COMMAND);
+//            }
+//        } else if (update.hasCallbackQuery()) {
+//            String callbackData = update.getCallbackQuery().getData();
+//            long chatId = update.getCallbackQuery().getMessage().getChatId();
+//
+//            SubscriberDTO subscriberDTO = getSubscriberDtoFromForms(chatId);
+//            if (callbackData.startsWith(COUNTRY_PREFIX)) {
+//                String countryName = callbackData.replace(COUNTRY_PREFIX, "");
+//                subscriberDTO.setCountry(countryName);
+//                sendCitySelection(chatId, countryName);
+//                System.out.println(LogConstants.SELECT_CITY);
+//            } else if (callbackData.startsWith(CITY_PREFIX)) {
+//                String cityName = callbackData.replace(CITY_PREFIX, "");
+//                subscriberDTO.setCity(cityName);
+//                Location location = botFacade.getLocation(subscriberDTO.getCountry(), subscriberDTO.getCity());
+//                Subscriber subscriber = Subscriber.builder()
+//                        .name(subscriberDTO.getFirstName())
+//                        .chatId(chatId)
+//                        .location(location)
+//                        .build();
+//                botFacade.addSubscriber(subscriber);
+//                sendTextMessage(chatId, SUCCESSFULLY_SUBSCRIBED_TO_DAILY_NOTIFICATIONS);
+//                System.out.println(LogConstants.subscribe(subscriberDTO.getFirstName(), chatId, LocalDateTime.now()));
+//                removeFromForms(chatId);
+//            }
+//        }
+//    }
 }

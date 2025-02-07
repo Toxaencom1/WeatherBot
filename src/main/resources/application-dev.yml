@@ -12,6 +12,12 @@ spring:
 
   datasource:
     url: jdbc:mysql://localhost:3307/JavaRush
-    username: ${db_username}
-    password: ${db_password}
+    username: ${db_username:mysql}
+    password: ${db_password:mysql}
     driver-class-name: com.mysql.cj.jdbc.Driver
+
+bot:
+  cron: 0 0/1 * * * *
+
+weather:
+  cron: 10 0 0 * * *

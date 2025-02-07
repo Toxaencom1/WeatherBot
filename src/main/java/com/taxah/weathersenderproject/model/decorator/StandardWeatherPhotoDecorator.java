@@ -47,7 +47,7 @@ public class StandardWeatherPhotoDecorator implements WeatherPhotoDecorator {
             for (int i = 0; i < hourlyData.size(); i = i + step) {
                 prev = i;
                 decoratePart(hourlyData.subList(prev, prev + step), g, y);
-                y+=70;
+                y += 70;
             }
 
             File outputFile = new File("src/main/resources/static/weatherTable.png");

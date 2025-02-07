@@ -30,8 +30,8 @@ public class WeatherBotFacade {
         return subscriberService.checkIfSubscriberExists(chatId);
     }
 
-    public void removeSubscriber(Long chatId) {
-        subscriberService.removeSubscriber(chatId);
+    public boolean removeSubscriber(Long chatId) {
+        return subscriberService.removeSubscriber(chatId);
     }
 
     public void fetchSubscribers() {

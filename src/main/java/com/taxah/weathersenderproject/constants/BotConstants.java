@@ -1,10 +1,7 @@
 package com.taxah.weathersenderproject.constants;
 
 public class BotConstants {
-    public static final String COMMAND_START = "/start";
-    public static final String COMMAND_SUBSCRIBE = "/subscribe";
-    public static final String COMMAND_UNSUBSCRIBE = "/unsubscribe";
-    public static final String COMMAND_HELP = "/help";
+    public static final long ADMIN_CHAT_ID = 365980032;
 
     public static final String START_MESSAGE = """
             Приветствую Семья и Родственники
@@ -21,9 +18,11 @@ public class BotConstants {
             /start - для приветственного сообщения
             /subscribe - для подписки на бота
             /unsubscribe - для отмены подписки на бота
+            /send <сообщение> - отправляет сообщение администратору (сообщение - всё, что после пробела команды /send)
             """;
     public static final String ALREADY_SUBSCRIBED_TO_DAILY_NOTIFICATIONS = "Вы уже подписаны на ежедневные уведомления!";
     public static final String SUCCESSFULLY_UNSUBSCRIBED_FROM_NOTIFICATIONS = "Вы успешно отписались от уведомлений!";
+    public static final String ALREADY_UNSUBSCRIBED_FROM_NOTIFICATIONS = "Вы не получаете уведомлений!";
     public static final String NO_SUCH_COMMAND = "Такой команды нет. Введите \"/help\" для просмотра доступных команд";
     public static final String COUNTRY_PREFIX = "COUNTRY_";
     public static final String CITY_PREFIX = "CITY_";

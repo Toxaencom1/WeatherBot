@@ -29,7 +29,7 @@ public class SubscribersNotificationService {
                 WeatherEntry weather = weathers.stream()
                         .filter(entry -> entry.getCityName().equals(city.getName()))
                         .findFirst()
-                        .orElseThrow(()-> new RuntimeException("There is no weather for " + city.getName()));
+                        .orElseThrow(() -> new RuntimeException("There is no weather for " + city.getName()));
                 String message = botFacade.decorateText(weather);
                 bot.sendTextMessage(subscriber.getChatId(), message, botFacade.decoratePhoto(weather.getWeatherResponseData()));
             }
