@@ -1,6 +1,6 @@
 package com.taxah.weathersenderproject.controller;
 
-import com.taxah.weathersenderproject.service.SubscribersNotificationService;
+import com.taxah.weathersenderproject.service.weather.SubscribersNotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;

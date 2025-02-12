@@ -1,7 +1,7 @@
 package com.taxah.weathersenderproject.controller;
 
 
-import com.taxah.weathersenderproject.service.WeatherBotFacade;
+import com.taxah.weathersenderproject.service.weather.WeatherBotFacade;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

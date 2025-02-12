@@ -1,4 +1,4 @@
-package com.taxah.weathersenderproject.service.onReceiveStrategy;
+package com.taxah.weathersenderproject.service.weather.onReceiveStrategy;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;

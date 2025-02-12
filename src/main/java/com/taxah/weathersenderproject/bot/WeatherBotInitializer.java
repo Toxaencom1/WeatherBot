@@ -1,7 +1,7 @@
 package com.taxah.weathersenderproject.bot;
 
 import com.taxah.weathersenderproject.model.weatherEntity.WeatherEntry;
-import com.taxah.weathersenderproject.service.WeatherBotFacade;
+import com.taxah.weathersenderproject.service.weather.WeatherBotFacade;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.ContextRefreshedEvent;

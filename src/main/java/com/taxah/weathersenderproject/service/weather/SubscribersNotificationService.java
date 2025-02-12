@@ -1,4 +1,4 @@
-package com.taxah.weathersenderproject.service;
+package com.taxah.weathersenderproject.service.weather;
 
 import com.taxah.weathersenderproject.bot.WeatherTelegramBot;
 import com.taxah.weathersenderproject.model.subscriberEntity.Subscriber;

@@ -1,11 +1,11 @@
-package com.taxah.weathersenderproject.service.onReceiveStrategy;
+package com.taxah.weathersenderproject.service.weather.onReceiveStrategy;
 
 import com.taxah.weathersenderproject.bot.WeatherTelegramBot;
 import com.taxah.weathersenderproject.constants.LogConstants;
 import com.taxah.weathersenderproject.model.subscriberEntity.Subscriber;
 import com.taxah.weathersenderproject.model.subscriberEntity.dto.SubscriberDTO;
 import com.taxah.weathersenderproject.model.weatherEntity.Location;
-import com.taxah.weathersenderproject.service.WeatherBotFacade;
+import com.taxah.weathersenderproject.service.weather.WeatherBotFacade;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 

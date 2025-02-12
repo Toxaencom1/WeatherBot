@@ -1,4 +1,4 @@
-package com.taxah.weathersenderproject.service;
+package com.taxah.weathersenderproject.service.weather;
 
 import com.taxah.weathersenderproject.model.decorator.WeatherPhotoDecorator;
 import com.taxah.weathersenderproject.model.decorator.WeatherTextDecorator;
