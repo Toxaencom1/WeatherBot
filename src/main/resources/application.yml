@@ -10,7 +10,7 @@ spring:
 
 weatherAPI:
   url: https://www.meteosource.com/api/v1/free/point
-  apiKey: ${X-API-Key}
+  apiKey: ${X-API-KEY}
 
 default:
   cron:
@@ -18,9 +18,9 @@ default:
     weather: 10 0 0 * * *
 
 bot:
-  cron: ${bot_cron} #0 0/1 * * * * #0 0 7 * * *
-  name: ${bot_name}
-  token: ${bot_token}
+  cron: ${BOT_CRON} #0 0/1 * * * * #0 0 7 * * *
+  name: ${BOT_NAME}
+  token: ${BOT_TOKEN}
 
 weather:
-  cron: ${weather_cron} #10 0 0 * * *
+  cron: ${WEATHER_CRON} #10 0 0 * * *

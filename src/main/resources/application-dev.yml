@@ -12,8 +12,8 @@ spring:
 
   datasource:
     url: jdbc:mysql://localhost:3307/JavaRush
-    username: ${db_username:mysql}
-    password: ${db_password:mysql}
+    username: ${DB_USERNAME:mysql}
+    password: ${DB_PASSWORD:mysql}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
 bot:
