@@ -12,18 +12,14 @@ services:
       - BOT_NAME=toxaencom1_first_bot
       - X_API_KEY=${X_API_KEY}
       - BOT_TOKEN=${BOT_TOKEN}
+      - DB_IP=${DB_IP}
+      - DB_PORT=${DB_PORT}
       - DB_USERNAME=${DB_USERNAME}
       - DB_PASSWORD=${DB_PASSWORD}
-      - bot_cron=0 0 7 * * *
-      - weather_cron=10 0 0 * * *
+      - BOT_CRON=0 0 7 * * *
+      - WEATHER_CRON=10 0 0 * * *
       - JAVA_TOOL_OPTIONS=-Duser.timezone=Asia/Aqtobe
-    networks:
-      - app-network
     dns:
       - 8.8.8.8  # Google DNS
       - 8.8.4.4
     restart: unless-stopped
-
-networks:
-  app-network:
-    external: true
