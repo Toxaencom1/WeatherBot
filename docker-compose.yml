@@ -14,9 +14,14 @@ services:
       - BOT_TOKEN=${BOT_TOKEN}
       - DB_IP=${DB_IP}
       - DB_PORT=${DB_PORT}
+      - RELAY_IP=${RELAY_IP}
+      - RELAY_DELAY=${RELAY_DELAY}
       - DB_USERNAME=${DB_USERNAME}
       - DB_PASSWORD=${DB_PASSWORD}
-      - BOT_CRON=0 0 7 * * *
+      - HOST_IP=${HOST_IP}
+      - SSH_USERNAME=${SSH_USERNAME}
+      - SSH_PASSWORD=${SSH_PASSWORD}
+      - BOT_CRON=10 2 0 * * *
       - WEATHER_CRON=10 0 0 * * *
       - JAVA_TOOL_OPTIONS=-Duser.timezone=Asia/Aqtobe
     dns:

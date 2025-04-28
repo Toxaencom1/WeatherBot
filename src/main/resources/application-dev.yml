@@ -15,6 +15,7 @@ spring:
     username: ${DB_USERNAME:mysql}
     password: ${DB_PASSWORD:mysql}
     driver-class-name: com.mysql.cj.jdbc.Driver
+    db-ip: 127.0.0.1
 
 bot:
   cron: 0 0/1 * * * *

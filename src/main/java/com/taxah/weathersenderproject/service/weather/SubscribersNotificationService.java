@@ -18,7 +18,7 @@ public class SubscribersNotificationService {
     private final WeatherTelegramBot bot;
 
     @Scheduled(cron = "${bot.cron}")
-    public void sendDailyMessages() {
+    public boolean sendDailyMessages() {
         WeatherBotFacade botFacade = bot.getBotFacade();
         List<WeatherEntry> weathers = bot.getWeathers();
         List<Subscriber> subscribers = botFacade.getSubscribers();
@@ -33,6 +33,9 @@ public class SubscribersNotificationService {
                 String message = botFacade.decorateText(weather);
                 bot.sendTextMessage(subscriber.getChatId(), message, botFacade.decoratePhoto(weather.getWeatherResponseData()));
             }
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -42,5 +45,9 @@ public class SubscribersNotificationService {
         for (Subscriber subscriber : subscribers) {
             bot.sendTextMessage(subscriber.getChatId(), message);
         }
+    }
+
+    public void sendCommonMessage(Long chatId, String message) {
+        bot.sendTextMessage(chatId, message);
     }
 }
