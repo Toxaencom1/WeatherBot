@@ -2,6 +2,7 @@
 spring:
   application:
     name: WeatherSender
+    version: 0.0.1
   main:
     allow-bean-definition-overriding: true
   profiles:
